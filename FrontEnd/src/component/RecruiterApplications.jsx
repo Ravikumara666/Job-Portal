@@ -20,6 +20,7 @@ import NavBar from './NavBar';
 
 // Mock NavBar component for demonstration
 
+const BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL;
 const RecruiterApplications = () => {
   const [applications, setApplications] = useState([]);
   const [filteredApplications, setFilteredApplications] = useState([]);
@@ -30,14 +31,13 @@ const RecruiterApplications = () => {
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
 
-  useEffect(() => {
-    // Simulate API call with mock data
+useEffect(() => {
     const fetchApplications = async () => {
       try {
-        // Simulate loading delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setApplications(mockApplications);
-        setFilteredApplications(mockApplications);
+        const response = await axios.get(`${BASE_URL}api/application/recruiter/applications`, {
+          withCredentials: true,
+        });
+        setApplications(response.data.applications);
       } catch (err) {
         console.error('Error fetching applications:', err);
       } finally {
