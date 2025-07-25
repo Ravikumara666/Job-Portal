@@ -122,12 +122,13 @@ export const login = async (req, res) => {
 
     // Send token in HTTP-only cookie
     res.cookie('token', token, {
-      httpOnly: true,
-      secure: false,           // For localhost
-      sameSite: 'Lax',         // Safer cross-origin handling for localhost
-      maxAge: 60 * 60 * 1000,  // 1 hour
-      path: '/'                // Make sure cookie is available site-wide
-    });
+  httpOnly: true,
+  secure: true,           // ✅ Required for HTTPS
+  sameSite: 'None',       // ✅ Required for cross-origin requests with cookies
+  maxAge: 60 * 60 * 1000,
+  path: '/'
+});
+
 
     // Send user data (excluding password) as JSON response
     const { password: _, ...userData } = user._doc;
