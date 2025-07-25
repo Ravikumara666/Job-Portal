@@ -1,6 +1,6 @@
-# Job Portal  Live Web Link🔗🔗🔗 --  https://job-portal-liard-alpha.vercel.app/
+# Job Portal  
 
-A full-stack Job Portal web application built with the **MERN stack** (MongoDB, Express.js, React.js, Node.js). This portal allows users to register, login, browse jobs, and apply to job listings, while employers can post and manage job openings.
+Live Web Link🔗🔗📌📌  --  https://job-portal-liard-alpha.vercel.app/         A full-stack Job Portal web application built with the **MERN stack** (MongoDB, Express.js, React.js, Node.js). This portal allows users to register, login, browse jobs, and apply to job listings, while employers can post and manage job openings.
 
 ---
 
