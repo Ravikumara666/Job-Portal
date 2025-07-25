@@ -86,6 +86,7 @@ if (userProfile) {
 export const login = async (req, res) => {
   try {
     const { email, password, role } = req.body;
+    console.log("login function called")
 
     // Validate input
     if (!email || !password || !role) {

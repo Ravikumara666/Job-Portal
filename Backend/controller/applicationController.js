@@ -50,7 +50,7 @@ export const getRecruiterApplications = async (req, res) => {
     const applications = await Application.find({ recruiterId })
       .populate('applicantId', 'name email profile.resume')
       .populate('jobId', 'title');
-
+      console.log(applications);
     res.status(200).json({ applications });
   } catch (err) {
     console.error('Error fetching applications:', err);

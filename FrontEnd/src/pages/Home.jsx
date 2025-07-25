@@ -5,9 +5,11 @@ import { MapPin, Search } from "lucide-react";
 import heroImage from '../assets/manushya.png'
 import flowImage from '../assets/flow.png'
 import Footer from '../component/Footer';
+import { useNavigate } from 'react-router-dom';
+
   
 export default function Home() {
-  const userData = useSelector((state)=>state.auth.user)
+
   return (
     <div>
       <NavBar/>
@@ -22,7 +24,8 @@ export default function Home() {
 // Hero Section function
 
 function HeroSection() {
-  return (
+  const navigate=useNavigate()
+    return (
     <section className="bg-gray-50 py-16 px-4 md:px-20">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
         {/* Left Section */}
@@ -55,7 +58,7 @@ function HeroSection() {
                   className="outline-none px-2 py-2 w-full"
                 />
               </div>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-md transition-all ml-auto">
+              <button onClick={()=>navigate('/jobs')} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-md transition-all ml-auto">
                 Find Job
               </button>
             </div>

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import * as THREE from 'three';
 import { 
   Briefcase, 
   MapPin, 
@@ -19,64 +20,17 @@ import {
   Award,
   Target,
   Filter,
-  Search
+  Search,
+  Sparkles
 } from 'lucide-react';
+
 import NavBar from '../component/NavBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchJobs } from '../redux/features/JobSlice.jsx';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ToastMessage from '../component/ToastMessage.jsx';
 
-// Mock data for demonstration
-// const mockJobs = [
-//   {
-//     _id: '1',
-//     title: 'Senior Frontend Developer',
-//     description: 'Join our dynamic team to build cutting-edge web applications using React, TypeScript, and modern tools. You\'ll work on exciting projects that impact millions of users worldwide.',
-//     company: 'TechFlow Inc.',
-//     location: 'San Francisco, CA',
-//     salary: '$120,000 - $150,000',
-//     jobType: 'Full-time',
-//     experienceLevel: 'Senior',
-//     skills: ['React', 'TypeScript', 'Node.js', 'GraphQL', 'AWS'],
-//     postedBy: 'recruiter1',
-//     postedDate: '2024-01-15',
-//     applicants: 23,
-//     featured: true
-//   },
-//   {
-//     _id: '2',
-//     title: 'Product Designer',
-//     description: 'Create beautiful and intuitive user experiences for our mobile and web applications. Work closely with engineers and product managers.',
-//     company: 'Design Studio Pro',
-//     location: 'New York, NY',
-//     salary: '$90,000 - $120,000',
-//     jobType: 'Full-time',
-//     experienceLevel: 'Mid-level',
-//     skills: ['Figma', 'Sketch', 'Prototyping', 'User Research', 'Design Systems'],
-//     postedBy: 'recruiter2',
-//     postedDate: '2024-01-10',
-//     applicants: 15,
-//     featured: false
-//   },
-//   {
-//     _id: '3',
-//     title: 'DevOps Engineer',
-//     description: 'Build and maintain scalable infrastructure, implement CI/CD pipelines, and ensure high availability of our services.',
-//     company: 'CloudTech Solutions',
-//     location: 'Austin, TX',
-//     salary: '$110,000 - $140,000',
-//     jobType: 'Remote',
-//     experienceLevel: 'Senior',
-//     skills: ['Docker', 'Kubernetes', 'AWS', 'Terraform', 'Jenkins'],
-//     postedBy: 'recruiter1',
-//     postedDate: '2024-01-08',
-//     applicants: 31,
-//     featured: true
-//   }
-// ];
-
-// const mockUser = { role: 'student', email: 'student@example.com', _id: 'student1' };
 const BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL;
 export default function Jobs() {
   const dispatch = useDispatch();
@@ -97,11 +51,112 @@ const { jobs, loading, error } = useSelector((state) => state.jobs);
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [likedJobs, setLikedJobs] = useState(new Set());
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    const canvasRef = useRef();
+    const sceneRef = useRef();
+    const rendererRef = useRef();
+  const [toast, setToast] = useState({ message: '', type: '' });
+    
+    
+
+     useEffect(() => {
+        if (!canvasRef.current) return;
+    
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, alpha: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 0);
+        
+        // Create floating geometric shapes
+        const geometries = [
+          new THREE.BoxGeometry(0.5, 0.5, 0.5),
+          new THREE.SphereGeometry(0.3, 16, 16),
+          new THREE.ConeGeometry(0.3, 0.6, 8),
+          new THREE.OctahedronGeometry(0.4)
+        ];
+    
+        const materials = [
+          new THREE.MeshPhongMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.3 }),
+          new THREE.MeshPhongMaterial({ color: 0x8b5cf6, transparent: true, opacity: 0.3 }),
+          new THREE.MeshPhongMaterial({ color: 0x06b6d4, transparent: true, opacity: 0.3 }),
+          new THREE.MeshPhongMaterial({ color: 0x10b981, transparent: true, opacity: 0.3 })
+        ];
+    
+        const meshes = [];
+        for (let i = 0; i < 12; i++) {
+          const geometry = geometries[Math.floor(Math.random() * geometries.length)];
+          const material = materials[Math.floor(Math.random() * materials.length)];
+          const mesh = new THREE.Mesh(geometry, material);
+          
+          mesh.position.set(
+            (Math.random() - 0.5) * 20,
+            (Math.random() - 0.5) * 20,
+            (Math.random() - 0.5) * 20
+          );
+          
+          mesh.rotation.set(
+            Math.random() * Math.PI,
+            Math.random() * Math.PI,
+            Math.random() * Math.PI
+          );
+          
+          scene.add(mesh);
+          meshes.push(mesh);
+        }
+    
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        scene.add(ambientLight);
+        
+        const pointLight = new THREE.PointLight(0x3b82f6, 1, 100);
+        pointLight.position.set(10, 10, 10);
+        scene.add(pointLight);
+    
+        camera.position.z = 15;
+    
+        // Animation loop
+        const animate = () => {
+          requestAnimationFrame(animate);
+          
+          meshes.forEach((mesh, index) => {
+            mesh.rotation.x += 0.01;
+            mesh.rotation.y += 0.01;
+            mesh.position.y += Math.sin(Date.now() * 0.001 + index) * 0.002;
+          });
+          
+          renderer.render(scene, camera);
+        };
+        
+        animate();
+        
+        sceneRef.current = scene;
+        rendererRef.current = renderer;
+    
+        const handleResize = () => {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        };
+    
+        window.addEventListener('resize', handleResize);
+    
+        return () => {
+          window.removeEventListener('resize', handleResize);
+          if (rendererRef.current) {
+            rendererRef.current.dispose();
+          }
+        };
+      }, []);
 
 
 const handleApply = async (jobId) => {
   if (!user) {
-    alert('Please login to apply');
+    setToast({ message:"Already Applied", type: 'danger' });
+    setTimeout(() => {
+            setToast({ message: '', type: '' });
+          }, 3000);
     return;
   }
 
@@ -109,7 +164,7 @@ const handleApply = async (jobId) => {
     const res = await axios.post(
       `${BASE_URL}/api/applications/apply/${jobId}`,
       {
-        name: user.name,
+        name: user.fullName,
         email: user.email,
         phone: user.phone,
         resume:user.profile.resume,
@@ -121,14 +176,25 @@ const handleApply = async (jobId) => {
         },
       }
     );
-
-    alert('Applied successfully!');
+     setShowSuccessPopup(true);
+    setTimeout(() => {
+        setShowSuccessPopup(false);
+        // Add navigation logic here - you might need to use React Router
+        // For example: navigate('/') or window.location.href = '/'
+        // Simple redirect - adjust based on your routing
+      }, 2000);
   } catch (error) {
     console.error('Apply Error:', error);
     if (error.response) {
-      alert(error.response.data.message || 'Failed to apply');
+      setToast({ message:error.response.data.message, type: 'danger' });
+    setTimeout(() => {
+            setToast({ message: '', type: '' });
+          }, 3000);
     } else {
-      alert('Something went wrong');
+      setToast({ message:'Something went wrong', type: 'danger' });
+    setTimeout(() => {
+            setToast({ message: '', type: '' });
+          }, 3000);
     }
   }
 };
@@ -313,182 +379,37 @@ const handleApply = async (jobId) => {
       <div className={`absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10`} />
     </div>
   );
-// const JobCard = ({ job, index, user, likedJobs, toggleLike, handleApply }) => {
-//   // ++ STATE MOVED INSIDE THE COMPONENT ++
-//   const [isHovered, setIsHovered] = useState(false);
-
-//   return (
-//     <div
-//       className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br transition-all duration-500 ease-out cursor-pointer
-//         ${job.featured 
-//           ? 'from-violet-50 via-white to-blue-50 border-2 border-gradient-to-r border-violet-200' 
-//           : 'from-gray-50 via-white to-gray-50 border border-gray-200'
-//         }
-//         ${isHovered ? 'transform scale-[1.02] shadow-2xl shadow-blue-500/20' : 'hover:shadow-xl'}
-//       `}
-//       // ++ HANDLERS USE LOCAL STATE ++
-//       onMouseEnter={() => setIsHovered(true)}
-//       onMouseLeave={() => setIsHovered(false)}
-//       style={{
-//         animation: `slideInUp 0.6s ease-out ${index * 0.1}s both`,
-//         transformOrigin: 'center bottom'
-//       }}
-//     >
-//       {/* Featured Badge */}
-//       {job.featured && (
-//         <div className="absolute top-4 right-4 z-10">
-//           <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 animate-pulse">
-//             <Star className="w-3 h-3" />
-//             Featured
-//           </div>
-//         </div>
-//       )}
-
-//       {/* Card Content */}
-//       <div className="p-6 relative z-10">
-//         {/* Header */}
-//         <div className="flex items-start justify-between mb-4">
-//           <div className="flex-1">
-//             {/* ++ CONDITION USES LOCAL STATE ++ */}
-//             <h2 className={`text-xl font-bold mb-2 transition-colors duration-300 ${
-//               isHovered ? 'text-blue-600' : 'text-gray-900'
-//             }`}>
-//               {job.title}
-//             </h2>
-//             <div className="flex items-center gap-4 text-sm text-gray-600">
-//               <div className="flex items-center gap-1">
-//                 <Building2 className="w-4 h-4 text-blue-500" />
-//                 <span className="font-medium">{job.company}</span>
-//               </div>
-//               <div className="flex items-center gap-1">
-//                 <MapPin className="w-4 h-4 text-green-500" />
-//                 <span>{job.location}</span>
-//               </div>
-//             </div>
-//           </div>
-          
-//           {/* Action Buttons */}
-//           <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-//             <button
-//               onClick={(e) => {
-//                 e.stopPropagation();
-//                 toggleLike(job._id);
-//               }}
-//               className={`p-2 rounded-full transition-all duration-300 ${
-//                 likedJobs.has(job._id)
-//                   ? 'bg-red-100 text-red-500 hover:bg-red-200'
-//                   : 'bg-gray-100 text-gray-400 hover:bg-red-100 hover:text-red-500'
-//               }`}
-//             >
-//               <Heart className={`w-4 h-4 ${likedJobs.has(job._id) ? 'fill-current' : ''}`} />
-//             </button>
-//             <button className="p-2 rounded-full bg-gray-100 text-gray-400 hover:bg-blue-100 hover:text-blue-500 transition-all duration-300">
-//               <Share2 className="w-4 h-4" />
-//             </button>
-//           </div>
-//         </div>
-
-//         {/* Job Details */}
-//         <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
-//           <div className="flex items-center gap-2">
-//             <DollarSign className="w-4 h-4 text-green-500" />
-//             <span className="font-medium">{job.salary}</span>
-//           </div>
-//           <div className="flex items-center gap-2">
-//             <Clock className="w-4 h-4 text-blue-500" />
-//             <span>{job.jobType}</span>
-//           </div>
-//           <div className="flex items-center gap-2">
-//             <Award className="w-4 h-4 text-purple-500" />
-//             <span>{job.experienceLevel}</span>
-//           </div>
-//           <div className="flex items-center gap-2">
-//             <Users className="w-4 h-4 text-orange-500" />
-//             <span>{job.applicants} applicants</span>
-//           </div>
-//         </div>
-
-//         {/* Description */}
-//         <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-//           {job.description}
-//         </p>
-
-//         {/* Skills */}
-//         <div className="mb-6">
-//           <div className="flex flex-wrap gap-2">
-//             {job.skills.map((skill, skillIndex) => (
-//               <span
-//                 key={skill}
-//                 // ++ CONDITION USES LOCAL STATE ++
-//                 className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
-//                   isHovered
-//                     ? 'bg-blue-500 text-white transform scale-110'
-//                     : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-//                 }`}
-//                 style={{ animationDelay: `${skillIndex * 0.05}s` }}
-//               >
-//                 {skill}
-//               </span>
-//             ))}
-//           </div>
-//         </div>
-
-//         {/* Action Buttons */}
-//         <div className="flex gap-3">
-//           {user?.role === 'student' && (
-//             <button
-//               onClick={() => handleApply(job._id)}
-//               // ++ CONDITION USES LOCAL STATE ++
-//               className={`flex-1 py-3 px-4 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
-//                 isHovered
-//                   ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg transform scale-105'
-//                   : 'bg-blue-500 text-white hover:bg-blue-600'
-//               }`}
-//             >
-//               <Target className="w-4 h-4" />
-//               Apply Now
-//             </button>
-//           )}
-          
-//           {!user && (
-//             <button className="flex-1 py-3 px-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-xl font-medium hover:from-yellow-500 hover:to-orange-600 transition-all duration-300 flex items-center justify-center gap-2">
-//               <LogIn className="w-4 h-4" />
-//               Login to Apply
-//             </button>
-//           )}
-
-//           {user?.role === 'recruiter' && user._id === job.postedBy && (
-//             <div className="flex gap-2">
-//               <button className="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-all duration-300 flex items-center gap-2">
-//                 <Edit className="w-4 h-4" />
-//                 Edit
-//               </button>
-//               <button className="px-4 py-2 text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-all duration-300 flex items-center gap-2">
-//                 <Trash2 className="w-4 h-4" />
-//                 Delete
-//               </button>
-//             </div>
-//           )}
-//         </div>
-//       </div>
-
-//       {/* Animated Background Effect */}
-//       <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl`} />
-      
-//       {/* Hover Glow Effect */}
-//       <div className={`absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10`} />
-//     </div>
-//   );
-// };
-
-  // function handlePostJob() {
-    
-  // }
-
 
   return (
     <>
     <NavBar/>
+    <ToastMessage message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: '' })} />
+          <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        {/* 3D Canvas Background */}
+        <canvas 
+          ref={canvasRef}
+          className="fixed inset-0 w-full h-full pointer-events-none z-0"
+        />
+        
+        {/* Animated Background Gradients */}
+        <div className="fixed inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 animate-pulse z-0" />
+        
+        {/* Success Popup */}
+        {showSuccessPopup && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+            <div className="bg-gradient-to-br from-green-400 to-emerald-500 p-8 rounded-3xl shadow-2xl text-center transform animate-pulse">
+              <div className="w-16 h-16 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-green-500" />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">Success! 🎉</h2>
+              <p className="text-white/90">Job Applied successfully!</p>
+              <div className="mt-4 w-full bg-white/20 rounded-full h-1">
+                <div className="bg-white h-1 rounded-full animate-pulse" style={{width: '100%'}}></div>
+              </div>
+              <p className="text-white/70 text-sm mt-2">Redirecting to home...</p>
+            </div>
+          </div>
+        )}
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -621,6 +542,7 @@ const handleApply = async (jobId) => {
           animation: fadeIn 0.5s ease-out;
           }
           `}</style>
+    </div>
     </div>
     </>
   );

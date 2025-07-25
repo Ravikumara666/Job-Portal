@@ -18,11 +18,13 @@ import {
 } from 'lucide-react';
 import NavBar from './NavBar';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 // Mock NavBar component for demonstration
 
 const BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL;
 const RecruiterApplications = () => {
+  const user = useSelector((state) => state.auth.user);
   const [applications, setApplications] = useState([]);
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,7 +37,7 @@ const RecruiterApplications = () => {
 useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/api/application/recruiter/applications`, {
+        const response = await axios.get(`${BASE_URL}/api/applications/recruiter/applications`, {
           withCredentials: true,
         });
         setApplications(response.data.applications);
@@ -256,7 +258,7 @@ useEffect(() => {
                         <div className="flex items-start justify-between">
                           <div>
                             <h3 className="text-xl font-semibold text-gray-900 mb-1">
-                              {app.applicantId?.name || 'N/A'}
+                              {app.name || 'N/A'}
                             </h3>
                             <div className="flex items-center gap-2 text-lg text-blue-600 font-medium">
                               <Briefcase className="w-5 h-5" />
