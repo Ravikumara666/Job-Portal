@@ -25,6 +25,7 @@ import NavBar from '../component/NavBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchJobs } from '../redux/features/JobSlice.jsx';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 // Mock data for demonstration
 // const mockJobs = [
