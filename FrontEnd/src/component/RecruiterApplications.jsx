@@ -35,7 +35,7 @@ const RecruiterApplications = () => {
 useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}api/application/recruiter/applications`, {
+        const response = await axios.get(`${BASE_URL}/api/application/recruiter/applications`, {
           withCredentials: true,
         });
         setApplications(response.data.applications);
