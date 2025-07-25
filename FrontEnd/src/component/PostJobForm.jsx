@@ -166,8 +166,9 @@ export default function PostJobForm() {
         setShowSuccessPopup(false);
         // Add navigation logic here - you might need to use React Router
         // For example: navigate('/') or window.location.href = '/'
-        window.location.href = '/'; // Simple redirect - adjust based on your routing
+        // window.location.href = '/'; // Simple redirect - adjust based on your routing
       }, 2000);
+      console.log("Job posted")
 
     } catch (err) {
       console.error('Failed to post job:', err);
