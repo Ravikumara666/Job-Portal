@@ -17,6 +17,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import NavBar from './NavBar';
+import axios from 'axios';
 
 // Mock NavBar component for demonstration
 
