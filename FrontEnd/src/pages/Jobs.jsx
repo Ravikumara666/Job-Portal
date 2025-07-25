@@ -107,7 +107,7 @@ const handleApply = async (jobId) => {
 
   try {
     const res = await axios.post(
-      `${BASE_URL}api/applications/apply/${jobId}`,
+      `${BASE_URL}/api/applications/apply/${jobId}`,
       {
         name: user.name,
         email: user.email,
