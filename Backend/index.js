@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: true }))
  
 app.use(logger('dev'))
 
-app.use("/api/application", ApplicationRouter);
+app.use("/api/applications", ApplicationRouter);
 app.use("/api/user", router)
 app.use("/api/jobs",JobRouter)
 
