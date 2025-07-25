@@ -25,11 +25,14 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import NavBar from './NavBar';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL;
 
 export default function RecruiterDashboard() {
+  const navigate=useNavigate();
   const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [editingJobId, setEditingJobId] = useState(null);
@@ -267,7 +270,7 @@ export default function RecruiterDashboard() {
                   ? 'Try adjusting your search or filter criteria' 
                   : 'Start by posting your first job opportunity'}
               </p>
-              <button className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 hover:scale-105">
+              <button onClick={()=>navigate('/postjob')} className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 hover:scale-105">
                 <Plus className="w-5 h-5" />
                 Post New Job
               </button>
