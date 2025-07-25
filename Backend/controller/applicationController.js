@@ -6,11 +6,11 @@ import { Application } from '../model/Application.js';
 export const applyForJob = async (req, res) => {
   try {
     const { jobId } = req.params;
-    const { name, email, phone } = req.body;
+    const { name, email, phone,resume } = req.body;
     const applicantId = req.user._id;
 
     // Check resume in user profile
-    const resumeUrl = req.user.profile?.resume;
+    const resumeUrl = resume;
     if (!resumeUrl) {
       return res.status(400).json({ message: 'Resume not found in user profile' });
     }

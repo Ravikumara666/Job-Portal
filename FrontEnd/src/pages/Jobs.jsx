@@ -112,6 +112,7 @@ const handleApply = async (jobId) => {
         name: user.name,
         email: user.email,
         phone: user.phone,
+        resume:user.profile.resume,
       },
       {
         withCredentials: true, // Send cookies (important if using session/cookie auth)
