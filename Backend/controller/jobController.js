@@ -5,7 +5,7 @@ export const createJob = async (req, res) => {
     if (req.user.role !== 'recruiter') {
       return res.status(403).json({ message: "Only recruiters can post jobs" });
     }
-
+    console.log("job creating at backend with user:", req.user);
     const newJob = new Job({
       ...req.body,
       postedBy: req.user._id
@@ -14,8 +14,9 @@ export const createJob = async (req, res) => {
     const savedJob = await newJob.save();
     res.status(201).json({ success: true, job: savedJob });
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
-  }
+  console.error('Error creating job:', err);
+  res.status(500).json({ message: err.message });
+}
 };
 
 export const getAllJobs = async (req, res) => {

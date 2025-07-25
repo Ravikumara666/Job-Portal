@@ -164,9 +164,6 @@ export default function PostJobForm() {
       // Navigate to home after 2 seconds
       setTimeout(() => {
         setShowSuccessPopup(false);
-        // Add navigation logic here - you might need to use React Router
-        // For example: navigate('/') or window.location.href = '/'
-        // window.location.href = '/'; // Simple redirect - adjust based on your routing
       }, 2000);
       console.log("Job posted")
 
