@@ -77,7 +77,7 @@ import axios from 'axios';
 // ];
 
 // const mockUser = { role: 'student', email: 'student@example.com', _id: 'student1' };
-
+const BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL;
 export default function Jobs() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -107,7 +107,7 @@ const handleApply = async (jobId) => {
 
   try {
     const res = await axios.post(
-      `http://localhost:3000/api/applications/apply/${jobId}`,
+      `${BASE_URL}api/applications/apply/${jobId}`,
       {
         name: user.name,
         email: user.email,
