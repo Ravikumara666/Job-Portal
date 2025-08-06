@@ -1,0 +1,59 @@
+name: Full CI - React and Express
+
+on: 
+  push: 
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-frontend:
+    name: Frontend CI - React
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: FrontEnd
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Frontend Build
+        run: npm run build
+
+      - name: Run Frontend Tests
+        run: |
+          npm test || (echo "Frontend Test Failed" && exit 1)
+
+  test-backend:
+    name: Backend CI - Express
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: Backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Backend Tests
+        run: |
+          npm test || (echo "Backend Test Failed" && exit 1)
