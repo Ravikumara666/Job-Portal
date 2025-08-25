@@ -31,7 +31,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ToastMessage from '../component/ToastMessage.jsx';
 
-const BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL;
+const BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL||'http://localhost:3000/api';
 export default function Jobs() {
   const dispatch = useDispatch();
   const navigate = useNavigate();

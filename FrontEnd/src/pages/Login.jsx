@@ -27,12 +27,12 @@ export default function Login() {
     console.log(loginData);
   }
 
-  const USER_END_POINT = import.meta.env.VITE_USER_END_POINT;
+  const VITE_ORIGINAL_BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL||'http://localhost:3000/api';
 
   async function handleSubmit() {
     try {
       const SendData = await axios.post(
-        `${USER_END_POINT}/login`,
+        `${VITE_ORIGINAL_BASE_URL}/api/user/login`,
         loginData,
         {
           headers: {

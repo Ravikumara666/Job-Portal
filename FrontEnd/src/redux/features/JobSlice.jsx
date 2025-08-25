@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Async Thunk to fetch all jobs
-const BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL;
+const BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL ||'http://localhost:3000/api';
 
 
 export const fetchJobs = createAsyncThunk("jobs/fetchJobs", async () => {

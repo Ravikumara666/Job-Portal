@@ -12,7 +12,7 @@ import { setUser } from "../redux/features/AuthSlice";
 export default function NavBar() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const USER_END_POINT = import.meta.env.VITE_USER_END_POINT;
+  const ORIGINAL_BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL||'http://localhost:3000/api';
 
   const [toast, setToast] = useState({ message: '', type: '' });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,7 +25,7 @@ export default function NavBar() {
 
   const handleLogout = async () => {
     try {
-      const result = await axios.get(`${USER_END_POINT}/logout`, {
+      const result = await axios.get(`${ORIGINAL_BASE_URL}/api/user/logout`, {
         withCredentials: true
       });
       setToast({ message: result.data.message, type: 'success' });

@@ -22,7 +22,7 @@ import { useSelector } from 'react-redux';
 
 // Mock NavBar component for demonstration
 
-const BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL;
+const BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL||'http://localhost:3000/api';
 const RecruiterApplications = () => {
   const user = useSelector((state) => state.auth.user);
   const [applications, setApplications] = useState([]);

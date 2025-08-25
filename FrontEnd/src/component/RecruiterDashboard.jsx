@@ -29,7 +29,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL;
+const BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL||'http://localhost:3000/api';
 
 export default function RecruiterDashboard() {
   const navigate=useNavigate();
@@ -119,7 +119,7 @@ export default function RecruiterDashboard() {
 
   const handleUpdate = async () => {
     try {
-      const res = await axios.put(`${BASE_URL}/api/jobs/${editingJobId}`, {
+      const res = await axios.put(`${BASE_URL}/jobs/${editingJobId}`, {
         ...editData,
         skills: editData.skills.split(',').map(skill => skill.trim())
       }, {

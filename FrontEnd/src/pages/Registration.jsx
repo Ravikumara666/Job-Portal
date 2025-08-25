@@ -19,7 +19,7 @@ export default function Registration() {
   });
 
   const [image, setImage] = useState(null);
-  const USER_END_POINT = import.meta.env.VITE_USER_END_POINT;
+  const VITE_ORIGINAL_BASE_URL = import.meta.env.VITE_ORIGINAL_BASE_URL||'http://localhost:3000/api';
 
   const handleOnChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -36,7 +36,7 @@ export default function Registration() {
       for (let key in userData) formData.append(key, userData[key]);
       if (image) formData.append('file', image);
 
-      const result = await axios.post(`${USER_END_POINT}/register`, formData, {
+      const result = await axios.post(`${VITE_ORIGINAL_BASE_URL}/api/user/register`, formData, {
         withCredentials: true,
         headers: { 'Content-Type': 'multipart/form-data' },
       });

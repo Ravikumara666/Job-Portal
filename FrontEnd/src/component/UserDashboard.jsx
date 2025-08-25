@@ -28,7 +28,7 @@ export default function UserDashboard() {
   const [toast, setToast] = useState({ message: '', type: '' });
   const [loading, setLoading] = useState(false);
   const [resume, setResume] = useState(null);
-  const USER_END_POINT = import.meta.env.VITE_USER_END_POINT;
+  const ORIGINAL_BASE_URL= import.meta.env.VITE_ORIGINAL_BASE_URL||'http://localhost:3000/api';
 
   // Initialize edit data when userData changes
   useEffect(() => {
@@ -116,7 +116,7 @@ const handleSave = async () => {
       console.log(`FormData - ${key}:`, value);
     }
 
-    const result = await axios.put(`${USER_END_POINT}/profile/update`, formData, {
+    const result = await axios.put(`${ORIGINAL_BASE_URL}/api/user/profile/update`, formData, {
       withCredentials: true,
       headers: { 
         'Content-Type': 'multipart/form-data' 

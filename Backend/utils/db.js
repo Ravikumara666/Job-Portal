@@ -5,7 +5,8 @@ dotenv.config();
 
 export const DBconnection = async () => {
   try {
-    const connectionString = process.env.MangoDB_URL;
+    const connectionString = process.env.MONGODB_URL;
+
     console.log("🔌 Connecting to:", connectionString,
         {
             useNewUrlParser: true,

@@ -27,19 +27,21 @@ const allowedOrigins = [
   'https://job-portal-liard-alpha.vercel.app',
 ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  })
-);
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (process.env.ALLOW_ALL_ORIGINS === 'true') {
+      callback(null, true);
+    } else if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+};
+app.use(cors(corsOptions));
+// app.use(cors({ origin: '*', credentials: true }));
 
 app.use(cookieParser());
 app.use(express.json());
